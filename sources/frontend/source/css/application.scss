@@ -1,0 +1,31 @@
+// Utilitarios do sass
+@import "compass/css3";
+
+@import "compass/utilities";
+
+@import "compass/reset";
+
+@import "compass/css3/user-interface";
+
+// Utilitarios pessoais do sass
+@import "_fonts";
+
+@import "_mixins";
+
+@import "_variables";
+
+@import "_animation";
+
+@import "_functions";
+
+@import "_general";
+
+@import "_colors";
+
+@import "_transitions";
+
+@import "_units";
+
+@import "_grid";
+
+@import "components/_assets";

@@ -1,0 +1,19 @@
+{
+  "name": "Wunderman_Task_Runner",
+  "version": "1.0.0",
+  "authors": [
+    "Gaulford <william.ma.ro@gmail.com>"
+  ],
+  "description": "Gulpfile default",
+  "main": "main",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "private": true,
+  "dependencies": {
+    "jquery": "^1.5.2"
+  }
+}

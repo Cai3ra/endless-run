@@ -1,0 +1,159 @@
+body, html {	
+	@include reset-box-model();
+	@include user-select(none);
+	-webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent; 
+	background-color: $bg;
+	@include font-size(16);
+	font-family: $light;
+	color: #b6b9ad;
+	overflow-x: hidden;
+	overflow-y: auto;
+	// @include scrollbar(6px, $clr-txt, rgba(0, 0, 0, 0.8));
+	 
+}
+
+a {
+	@include unstyled-link();
+}
+
+b, strong{
+	font-family: $bold;
+}
+
+.clear {
+	clear: both;
+}
+
+.views-container {
+	@include center-x; 
+	overflow: hidden;
+	clear: both;
+}
+
+.page-cover{
+	@include set-size(100%, 100vh);
+	position: relative;
+}
+
+
+.a-link{
+	text-decoration: none;
+	text-indent: -999999px;
+}
+
+canvas{
+	// z-index: 0;
+	@include maxWidth(1023) {
+		position: absolute;
+		top: 50px;
+	}
+}
+
+.center-y {
+	@include center-y();
+}
+
+.center-x {
+	@include center-x();	
+}
+
+.center {
+	@include center();
+}
+
+.hide {
+	display: none !important;
+}
+
+.show {
+	display: block !important;
+}
+
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.cursor-default {
+	cursor: default;
+}
+
+.float-left {
+	@include float(left);
+}
+
+.float-right {
+	@include float(right);
+}
+
+.relative {
+	position: relative !important;
+}
+
+.overflow-hidden {
+	overflow: hidden !important;
+}
+
+.txt-underline {
+	text-decoration: underline;
+}
+
+.inline-block {
+	display: inline-block !important;
+}
+
+.block {
+	display: block !important;
+}
+
+.txt-center {
+	text-align: center !important;
+}
+
+
+.hover-opacity {
+	opacity: 1;
+	@include transition(opacity 0.1s 0s $ease-in);
+	-webkit-backface-visibility: hidden;
+
+	&:hover {
+		opacity: 0.65 !important;
+	}
+}
+
+.hover-opacity-noanimate {
+	opacity: 1;
+
+	
+	&:hover {
+		@include transition(0 0s);
+		opacity: 0.65 !important;
+	}
+}
+
+
+.hover-underline, .hover-underline > * {
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+
+.hover-highlight {
+
+	background: transparent;
+	@include transition(background 0.1s 0s $ease-in);
+
+	&:hover {
+		background: rgba(0,0,0,0.2) !important;
+	}
+}
+
+
+
