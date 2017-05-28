@@ -9,6 +9,7 @@ config =
     logPrefix: "Development"
     notify: yes
     open: "external"
+    reloadDelay: 2000
     port: 3000
     server:
         baseDir: path.join __dirname, "../../../public/"

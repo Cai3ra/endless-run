@@ -20,6 +20,7 @@ class BrowserSync extends Atask
             notify: @config.notify
             open: @config.open
             port: @config.port
+            reloadDelay: @config.reloadDelay
             server:
                 baseDir: @config.server.baseDir
                 index: @config.server.index

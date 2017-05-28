@@ -46,11 +46,7 @@ b, strong{
 }
 
 canvas{
-	// z-index: 0;
-	@include maxWidth(1023) {
-		position: absolute;
-		top: 50px;
-	}
+	@include set-size(100%, 100vh);
 }
 
 .center-y {

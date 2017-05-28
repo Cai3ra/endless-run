@@ -208,10 +208,12 @@ Tunnel.prototype.render = function() {
 // All needed textures
 var textures = {
   "stone": {
-    url: "img/demo1/stonePattern.jpg"
+    url: 'img/demo3/galaxyTexture.jpg'
+    // url: "img/demo1/stonePattern.jpg"
   },
   "stoneBump": {
-    url: "img/demo1/stonePatternBump.jpg"
+    url: "img/demo3/galaxyTexture.jpg"
+    // url: "img/demo1/stonePatternBump.jpg"
   }
 };
 // Create a new loader

@@ -2,7 +2,7 @@
   "name": "Wunderman_Task_Runner",
   "version": "1.0.0",
   "authors": [
-    "Gaulford <william.ma.ro@gmail.com>"
+    "Caio Bassetti (caiera)"
   ],
   "description": "Gulpfile default",
   "main": "main",
@@ -13,7 +13,9 @@
     "bower_components"
   ],
   "private": true,
-  "dependencies": {
-    "jquery": "^1.5.2"
+  "dependencies": {},
+  "devDependencies": {
+    "three.js": "three#*",
+    "gsap": "^1.19.1"
   }
 }
