@@ -1,4 +1,5 @@
 Tunel = require './modules/Tunel.coffee'
+InfiniteRoad = require './modules/InfiniteRoad.coffee'
 
 class App
 	texturesLoaded:0
@@ -8,17 +9,29 @@ class App
 		},
 		'galaxy': {
 			url: 'img/textures/galaxyTexture.jpg'
+		},
+		'galaxy1': {
+			url: 'img/textures/galaxyTexture1.jpg'
+		},
+		'galaxy2': {
+			url: 'img/textures/galaxyTexture2.jpg'
+		},
+		'geometric': {
+			url: 'img/textures/geometricPattern.png'
 		}
 	}
 	loader: new THREE.TextureLoader()
 
 	constructor:()->
-		do @initLoader
+		@infiniteRoad = new InfiniteRoad()
+		console.log "main init", @infiniteRoad
+		# do @initLoader
 
 	initLoader:()=>
-		@loader.crossOrigin = "Anonymous"
-		@loader.load @textures.galaxy.url, (texture)=>
-			@tunel = new Tunel(texture)
+		# @loader.crossOrigin = "Anonymous"
+		# @loader.load @textures.galaxy2.url, (texture)=>
+		# 	@tunel = new Tunel(texture)
+
 
 init = ->	
 	app = new App()

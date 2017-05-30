@@ -16,6 +16,7 @@
   "dependencies": {},
   "devDependencies": {
     "three.js": "three#*",
-    "gsap": "^1.19.1"
+    "gsap": "^1.19.1",
+    "jquery": "^3.2.1"
   }
 }

@@ -23,12 +23,19 @@ class Tunel
             target: new THREE.Vector2(@WW2,@WH2)
         }
 
+        @tubeDirection = {
+            position:new THREE.Vector2(@WW2,@WH2)
+            angle:{x:0.5,y:0.5}
+        }
+
         @renderer = new THREE.WebGLRenderer({
             antialias: true,
             canvas: document.querySelector "#scene"
         })
         @renderer.setSize @WW, @WH
         console.log @WW, @WH
+
+        
 
         @camera = new THREE.PerspectiveCamera(15, @WW / @WH, 0.01, 1000)
         @camera.rotation.y = Math.PI
@@ -66,10 +73,9 @@ class Tunel
 
         @tubeGeometry = new THREE.TubeGeometry(@curve, 70, 0.02, 30, false)
         @tubeGeometry_o = @tubeGeometry.clone()
-        @tubeMesh = new THREE.Mesh @tubeGeometry, @tubeMaterial
+        @tubeMesh = new THREE.Mesh @tubeGeometry, @tubeMaterial;
 
         @scene.add @tubeMesh
-
 
     handleEvents:()=>
         console.log "handleEvents"
@@ -80,8 +86,8 @@ class Tunel
         @textureParams = {
             offsetX: 0,
             offsetY: 0,
-            repeatX: 10,
-            repeatY: 4
+            repeatX: 0.5,
+            repeatY: 15
         }
         @cameraShake = {
             x: 0,
@@ -100,7 +106,7 @@ class Tunel
             repeatX: 10,
             ease: Power2.easeInOut
         }, "-=5")
-
+        hyperSpace.pause()
         shake = new TimelineMax({ repeat: -1, repeatDelay: 5 })
         shake.to(@cameraShake, 2, {
             x: -0.01,
@@ -124,6 +130,10 @@ class Tunel
                 clamp: false
             })
         })
+        shake.pause()
+
+        window.shake = shake
+        window.hyperSpace = hyperSpace
         console.log "initAnimation", shake, hyperSpace
         
 
@@ -152,8 +162,8 @@ class Tunel
         @mouse.ratio.x = @mouse.position.x / @WW
         @mouse.ratio.y = @mouse.position.y / @WH
 
-        @camera.position.x = @mouse.ratio.x * 0.044 - 0.025 + @cameraShake.x
-        @camera.position.y = @mouse.ratio.y * 0.044 - 0.025    
+        # @camera.position.x = @mouse.ratio.x * 0.044 - 0.025 + @cameraShake.x
+        # @camera.position.y = @mouse.ratio.y * 0.044 - 0.025    
 
     updateCurve:()=>
         # console.log "updateCurve"
@@ -170,13 +180,32 @@ class Tunel
         
         @tubeGeometry.verticesNeedUpdate = true
 
-        @curve.points[2].x = 0.6 * (1 - @mouse.ratio.x) - 0.3
-        @curve.points[3].x = 0
-        @curve.points[4].x = 0.6 * (1 - @mouse.ratio.x) - 0.3
+        @tubeDirection.angle.x += 0.05;
+        @tubeDirection.angle.y += -0.04;
+        @tubeDirection.position.x = 0.5 + Math.sin(@tubeDirection.angle.x) * 0.25;
+        @tubeDirection.position.y = 0.5 + Math.cos(@tubeDirection.angle.y) * 0.25;
 
-        @curve.points[2].y = 0.6 * (1 - @mouse.ratio.y) - 0.3
+        @curve.points[2].x = 0.6 * (1 - @tubeDirection.position.x) - 0.3
+        @curve.points[3].x = 0
+        @curve.points[4].x = 0.6 * (1 - @tubeDirection.position.x) - 0.3
+
+        # for i in [2...4]
+        #     @curve.points[i].x = 0.6 * (1 - @tubeDirection.position.x) - 0.3
+
+        @curve.points[2].y = 0.6 * (1 - @tubeDirection.position.y) - 0.3
         @curve.points[3].y = 0
-        @curve.points[4].y = 0.6 * (1 - @mouse.ratio.y) - 0.3
+        @curve.points[4].y = 0.6 * (1 - @tubeDirection.position.y) - 0.3
+
+        @textureParams.offsetX += 0.1;
+        # @textureParams.repeatY += 0.1;
+
+        # @curve.points[2].x = 0.6 * (1 - @mouse.ratio.x) - 0.3
+        # @curve.points[3].x = 0
+        # @curve.points[4].x = 0.6 * (1 - @mouse.ratio.x) - 0.3
+
+        # @curve.points[2].y = 0.6 * (1 - @mouse.ratio.y) - 0.3
+        # @curve.points[3].y = 0
+        # @curve.points[4].y = 0.6 * (1 - @mouse.ratio.y) - 0.3
 
         @splineMesh.geometry.verticesNeedUpdate = true
         @splineMesh.geometry.vertices = @curve.getPoints(70)
