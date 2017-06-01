@@ -28,9 +28,9 @@ class App
 		# do @initLoader
 
 	initLoader:()=>
-		# @loader.crossOrigin = "Anonymous"
-		# @loader.load @textures.galaxy2.url, (texture)=>
-		# 	@tunel = new Tunel(texture)
+		@loader.crossOrigin = "Anonymous"
+		@loader.load @textures.galaxy2.url, (texture)=>
+			@tunel = new Tunel(texture)
 
 
 init = ->	

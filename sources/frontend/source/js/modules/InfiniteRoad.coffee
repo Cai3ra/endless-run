@@ -1,9 +1,10 @@
+Mountain = require "./Mountain.coffee"
+Runner = require "./Runner.coffee"
+
 class InfiniteRoad
 
     constructor:()->
         console.log "InifiniteRoad"
-        
-
         window.addEventListener 'resize', @onResize
         do @setUp
         do @init
@@ -25,7 +26,7 @@ class InfiniteRoad
         @controls = {}
         @directionalLight = {}
         @globalRenderID = {}
-        @hero = {}
+        @runner = {}
         @hemisphereLight = {}
         @mountains = []
         @plane = {}
@@ -70,16 +71,21 @@ class InfiniteRoad
         @plane = new THREE.Mesh( planeGeometry, planeMaterial )
         @plane.rotation.x = 1.570
         @plane.receiveShadow = true
+        
 
         do @createLandscapeFloors
-        for i in [0...30]
+        for i in [0...120]
             isEast = false
             if i % 2 is 0
                 isEast = true
-            @createMountain i, isEast
+            _mountain = new Mountain(i, isEast, @PLANE_LENGTH, @PLANE_WIDTH) 
+        
+        $(window).on "mountain_loaded", (e, _mountain)=>
+            @mountains.push _mountain
+            @scene.add _mountain
 
         # SKY
-        skyGeometry = new THREE.BoxGeometry 1200, 800, 1, 1
+        skyGeometry = new THREE.BoxGeometry @WW*1.5, @WH, 1, 1
         skyMaterial = new THREE.MeshBasicMaterial {
             map: THREE.ImageUtils.loadTexture( 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/26757/background.jpg' ),
             depthWrite: false,
@@ -90,13 +96,18 @@ class InfiniteRoad
         sky.position.z = -@PLANE_LENGTH / 2 + @PADDING
 
         # LIGHTS
-        # do @createSpotlights
-        directionalLight = new THREE.DirectionalLight 0xffffff, 1
+        do @createSpotlights
+        directionalLight = new THREE.DirectionalLight 0x00ff00, 1
         directionalLight.position.set 0, 1, 0
         hemisphereLight = new THREE.HemisphereLight 0x000000, 0x37474F, 1
         hemisphereLight.position.y = 500
 
-        @scene.add @camera, directionalLight, hemisphereLight, @plane, @axishelper
+        # RUNNER
+        @runner = new Runner(@PLANE_WIDTH, @PLANE_LENGTH, @PADDING)
+
+        # @scene.add @camera, directionalLight, @plane, @axishelper, @runner
+        @scene.add @camera, directionalLight, hemisphereLight, @plane, sky, @axishelper, @runner
+        
 
     createLandscapeFloors:()=>
         planeLeft = {}
@@ -151,47 +162,9 @@ class InfiniteRoad
         
         if @mountains.length > 0
             @mountains.forEach (el, idx)->
-                el.animate()
+                el.animate() if el
 
         @renderer.render @scene, @camera
-
-    createObject:(i, isEast, prototype)=>
-        # console.log "createObject"
-        object = {}
-        objectDimensionX = {}
-        objectDimensionY = {}
-        objectDimensionZ = {}
-        object = prototype.clone()
-        objectDimensionX = Math.random() * 0.25 + 0.05
-        objectDimensionY = Math.random() * 0.25
-        objectDimensionZ = objectDimensionX
-        object.scale.set objectDimensionX, objectDimensionY, objectDimensionZ
-
-        if isEast is true
-            object.position.x = @PLANE_WIDTH * 2
-            object.position.z = (i * @PLANE_LENGTH / 27) - (1.5 * @PLANE_LENGTH)
-        else
-            object.position.x = -@PLANE_WIDTH * 2
-            object.position.z = (i * @PLANE_LENGTH / 27) - (@PLANE_LENGTH / 2)
-        
-        object.visible = true
-        object.animate = =>
-            if object.position.z < @PLANE_LENGTH / 2 - @PLANE_LENGTH / 10
-                object.position.z += 5
-            else
-                object.position.z = -@PLANE_LENGTH / 2
-        @mountains.push object
-        @scene.add object
-
-
-    createMountain:(idx, isEast)=>
-        prototype = {}
-        loader = new THREE.ColladaLoader()
-        loader.load 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/26757/mountain.dae', (collada)=>
-            prototype = collada.scene
-            prototype.visible = false
-            @createObject idx, isEast, prototype
-
     
     onResize:()=>
         @WW = window.innerWidth
