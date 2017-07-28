@@ -1,10 +1,10 @@
 Mountain = require "./Mountain.coffee"
 Runner = require "./Runner.coffee"
+Obstacle = require "./Obstacle.coffee"
 
 class InfiniteRoad
 
     constructor:()->
-        console.log "InifiniteRoad"
         window.addEventListener 'resize', @onResize
         do @setUp
         do @init
@@ -19,7 +19,7 @@ class InfiniteRoad
         @PLANE_WIDTH = 50
         @PLANE_LENGTH = 1000
         @PADDING = @PLANE_WIDTH / 5 * 2
-        @POWERUP_COUNT = 10
+        @OBSTACLES_COUNT = 10
 
         @axishelper = {}
         @camera = {}
@@ -32,11 +32,12 @@ class InfiniteRoad
         @plane = {}
         @planeGeometry = {}
         @planeMaterial = {}
-        @powerup = {}	
-        @powerups = []
-        @powerupSpawnIntervalID = {}
-        @powerupCounterIntervalID = {}
-        @queue = {}
+        @obstacle = {}	
+        @obstacles = []
+        @obstacleSpawnIntervalID = {}
+        @obstacleSpawnTime = 4000
+        @obstacleCounterIntervalID = {}
+        @obstacleCounterTime = 30000
         @renderer = {}
         @scene = {}
         @sky = {}
@@ -44,7 +45,6 @@ class InfiniteRoad
         @skyMaterial = {}
 
     init:()=>
-        console.log "init"
         THREE.ImageUtils.crossOrigin = ''
 
         @renderer = new THREE.WebGLRenderer {
@@ -87,7 +87,7 @@ class InfiniteRoad
         # SKY
         skyGeometry = new THREE.BoxGeometry @WW*1.5, @WH, 1, 1
         skyMaterial = new THREE.MeshBasicMaterial {
-            map: THREE.ImageUtils.loadTexture( 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/26757/background.jpg' ),
+            map: THREE.ImageUtils.loadTexture( 'img/background.jpg' ),
             depthWrite: false,
             side: THREE.BackSide
         }
@@ -102,12 +102,26 @@ class InfiniteRoad
         hemisphereLight = new THREE.HemisphereLight 0x000000, 0x37474F, 1
         hemisphereLight.position.y = 500
 
+        # OBSTACLES
+        do @startObstacles
+        
         # RUNNER
-        @runner = new Runner(@PLANE_WIDTH, @PLANE_LENGTH, @PADDING)
+        @runner = new Runner @PLANE_WIDTH, @PLANE_LENGTH, @PADDING
 
         # @scene.add @camera, directionalLight, @plane, @axishelper, @runner
         @scene.add @camera, directionalLight, hemisphereLight, @plane, sky, @axishelper, @runner
         
+    startObstacles:=>
+        @obstacleSpawnIntervalID = window.setInterval =>
+            if @obstacles.length < @OBSTACLES_COUNT
+                _obst = new Obstacle @PLANE_WIDTH, @PLANE_LENGTH, @PADDING
+                @obstacles.push _obst
+                @scene.add _obst
+        , @obstacleSpawnTime
+
+        @obstacleCounterIntervalID = window.setInterval =>
+            @OBSTACLES_COUNT += 1
+        , @obstacleCounterTime
 
     createLandscapeFloors:()=>
         planeLeft = {}
@@ -160,12 +174,55 @@ class InfiniteRoad
     render:()=>
         @globalRenderID = requestAnimationFrame @render
         
+        if @obstacles.length > 0
+            @obstacles.forEach (el, idx)->
+                el.animate() if el
+        
         if @mountains.length > 0
             @mountains.forEach (el, idx)->
                 el.animate() if el
 
+        if @detectCollisions(@obstacles) is true
+            do @gameOver
+
         @renderer.render @scene, @camera
     
+    gameOver:()=>
+        cancelAnimationFrame @globalRenderID
+        window.clearInterval @obstacleSpawnIntervalID
+        window.clearInterval @obstacleCounterIntervalID
+
+        $('#overlay-gameover').fadeIn 100
+        $('#btn-restart').on 'click', @restartGame
+
+    restartGame:=>
+        $('#overlay-gameover').fadeOut 50
+        @OBSTACLE_COUNT = 10
+        @obstacles.forEach ( el, idx )=>
+            @scene.remove @obstacles[ idx ]
+
+        @obstacles = []
+        @runner.position.x = 0
+        do @render
+        do @startObstacles
+        $('#btn-restart').off 'click'
+
+    detectCollisions:(_obsts)=>
+        _origin = @runner.position.clone()
+        _vMax = @runner.geometry.vertices.length
+        for v in [0..._vMax]
+            _localVertex = @runner.geometry.vertices[v].clone()
+            _globalVertex = _localVertex.applyMatrix4(@runner.matrix)
+            _directionVector = _globalVertex.sub(@runner.position)
+            _ray = new THREE.Raycaster(_origin, _directionVector.clone().normalize())
+            _intersections = _ray.intersectObjects(_obsts)
+
+            if _intersections.length > 0 and _intersections[0].distance < _directionVector.length()
+                return true
+        
+        return false
+            
+
     onResize:()=>
         @WW = window.innerWidth
         @WH = window.innerHeight

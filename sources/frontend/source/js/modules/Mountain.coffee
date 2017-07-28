@@ -4,13 +4,12 @@ class Mountain
     
     constructor:(@idx, @isEast, @planeLen, @planeW)->
         loader = new THREE.ColladaLoader()
-        loader.load 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/26757/mountain.dae', (collada)=>
+        loader.load 'data/mountain.dae', (collada)=>
             @prototype = collada.scene
             @prototype.visible = false
             do @createObject
 
     createObject:()=>
-        # console.log "createObject"
         objectDimensionX = {}
         objectDimensionY = {}
         objectDimensionZ = {}

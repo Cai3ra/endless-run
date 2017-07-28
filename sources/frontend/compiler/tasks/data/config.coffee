@@ -4,7 +4,7 @@ path = require "path"
 # Setting task configuration
 config = 
     taskName: "data"
-    extension: ".{json, xml}"
+    extension: ".{json, xml, /*.**}"
     errorMsg: "Erro ao mover o data: <%= error.message %>"
     prefix: "**/*"
     paths:

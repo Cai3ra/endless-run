@@ -24,7 +24,6 @@ class App
 
 	constructor:()->
 		@infiniteRoad = new InfiniteRoad()
-		console.log "main init", @infiniteRoad
 		# do @initLoader
 
 	initLoader:()=>

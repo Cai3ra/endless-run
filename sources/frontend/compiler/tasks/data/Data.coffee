@@ -13,7 +13,7 @@ class Data extends Atask
         super(@environment)
 
     Task:=>
-        @Move "#{@config.paths.src}#{@config.prefix}#{@config.extension}", @config.paths.dest, "data"
+        @Move "#{@config.paths.src}#{@config.prefix}", @config.paths.dest, "data"
 
     Dev:=>
         @gulp.task @config.taskName, @Task
