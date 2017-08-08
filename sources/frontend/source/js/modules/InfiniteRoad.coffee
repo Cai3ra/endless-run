@@ -1,4 +1,5 @@
-Mountain = require "./Mountain.coffee"
+# Mountain = require "./Mountain.coffee"
+Scenery = require "./Scenery.coffee"
 Runner = require "./Runner.coffee"
 Obstacle = require "./Obstacle.coffee"
 
@@ -61,28 +62,31 @@ class InfiniteRoad
         @axishelper = new THREE.AxisHelper @PLANE_LENGTH / 2
 
         @camera = new THREE.PerspectiveCamera 45, @WW / @WH, 1, 3000
-        @camera.position.set 0, @PLANE_LENGTH / 125, @PLANE_LENGTH / 2 + @PLANE_LENGTH / 25
+        # @camera.position.set 0, @PLANE_LENGTH / 125, @PLANE_LENGTH / 2 + @PLANE_LENGTH / 25
+        @camera.position.set 0, @PLANE_LENGTH / 125, 325
+        window.camera = @camera
 
         # FLOOR
-        planeGeometry = new THREE.BoxGeometry @PLANE_WIDTH, @PLANE_LENGTH + @PLANE_LENGTH / 10, 1
-        planeMaterial = new THREE.MeshLambertMaterial {
-            color: 0x78909C
-        }
-        @plane = new THREE.Mesh( planeGeometry, planeMaterial )
-        @plane.rotation.x = 1.570
-        @plane.receiveShadow = true
+        # planeGeometry = new THREE.BoxGeometry @PLANE_WIDTH, @PLANE_LENGTH + @PLANE_LENGTH / 10, 1
+        # planeMaterial = new THREE.MeshLambertMaterial {
+        #     color: 0x78909C
+        # }
+        # @plane = new THREE.Mesh( planeGeometry, planeMaterial )
+        # @plane.rotation.x = 1.570
+        # @plane.receiveShadow = true
         
-
-        do @createLandscapeFloors
-        for i in [0...120]
-            isEast = false
-            if i % 2 is 0
-                isEast = true
-            _mountain = new Mountain(i, isEast, @PLANE_LENGTH, @PLANE_WIDTH) 
+        @scenery = new Scenery(@PLANE_WIDTH, @PLANE_LENGTH, @PADDING)
+        @scene.add @scenery
+        # do @createLandscapeFloors
+        # for i in [0...120]
+        #     isEast = false
+        #     if i % 2 is 0
+        #         isEast = true
+        #     _mountain = new Mountain(i, isEast, @PLANE_LENGTH, @PLANE_WIDTH) 
         
-        $(window).on "mountain_loaded", (e, _mountain)=>
-            @mountains.push _mountain
-            @scene.add _mountain
+        # $(window).on "mountain_loaded", (e, _mountain)=>
+        #     @mountains.push _mountain
+        #     @scene.add _mountain
 
         # SKY
         skyGeometry = new THREE.BoxGeometry @WW*1.5, @WH, 1, 1
@@ -96,20 +100,20 @@ class InfiniteRoad
         sky.position.z = -@PLANE_LENGTH / 2 + @PADDING
 
         # LIGHTS
-        do @createSpotlights
+        # do @createSpotlights
         directionalLight = new THREE.DirectionalLight 0x00ff00, 1
         directionalLight.position.set 0, 1, 0
         hemisphereLight = new THREE.HemisphereLight 0x000000, 0x37474F, 1
         hemisphereLight.position.y = 500
 
         # OBSTACLES
-        do @startObstacles
+        # do @startObstacles
         
         # RUNNER
         @runner = new Runner @PLANE_WIDTH, @PLANE_LENGTH, @PADDING
 
         # @scene.add @camera, directionalLight, @plane, @axishelper, @runner
-        @scene.add @camera, directionalLight, hemisphereLight, @plane, sky, @axishelper, @runner
+        @scene.add @camera, directionalLight, hemisphereLight, sky, @axishelper
         
     startObstacles:=>
         @obstacleSpawnIntervalID = window.setInterval =>
@@ -178,9 +182,9 @@ class InfiniteRoad
             @obstacles.forEach (el, idx)->
                 el.animate() if el
         
-        if @mountains.length > 0
-            @mountains.forEach (el, idx)->
-                el.animate() if el
+        # if @mountains.length > 0
+        #     @mountains.forEach (el, idx)->
+        #         el.animate() if el
 
         if @detectCollisions(@obstacles) is true
             do @gameOver

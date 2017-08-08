@@ -28,8 +28,8 @@ class Mountain
         
         @object.visible = true
         @object.animate = =>
-            if @object.position.z < @planeLen / 2 - @planeLen / 10
-                @object.position.z += 5
+            if @object.position.z < @planeLen / 2 - @planeLen / 150
+                @object.position.z += 0.5
             else
                 @object.position.z = -@planeLen / 2
 
