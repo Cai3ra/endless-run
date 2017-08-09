@@ -39,8 +39,7 @@ class Loader
     constructor:()->
         console.log "Loader", @
 
-    start:()->
-        $(@).trigger "start"
+    start:()=>
         manager = new THREE.LoadingManager()
         manager.onProgress = ( item, loaded, total )=>
             # console.log "LoadingManager onProgress: ", item, loaded, total
