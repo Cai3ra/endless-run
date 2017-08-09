@@ -1,70 +1,15 @@
 Model3D = require "./Model3D.coffee" 
 
 class Scenery extends THREE.Group
-    objects: {
-        river: {
-            url: 'RIO_01.obj',
-            position:{x:0, y:0, z:0}
-        },
-        wallR: {
-            url: 'PAREDE_01.obj',
-            position:{x:300, y:0, z:0}
-        },
-        bush: {
-            url: 'ARBUSTO_01.obj',
-            position:{x:0, y:-15, z:200}
-        },
-        arch: {
-            url: 'ARCO_01.obj',
-            position:{x:0, y:0, z:0}
-        },
-        three: {
-            url: 'ARVORE_01.obj',
-            position:{x:0, y:5, z:250}
-        },        
-        # rock1: {
-        #     url: 'PEDRAS_01.obj',
-            # position:{x:0, y:0, z:0}
-        # },
-        # rock2:{
-        #     url: 'PEDRAS_02.obj',
-            # position:{x:0, y:0, z:0}
-        # },
-        plant: {
-            url: 'PLANTINHA_01.obj',
-            position:{x:0, y:-3, z:240}
-        }
-    }
 
     constructor:(@planeW, @planeLen, @padding)->
         super()
         console.log "Scenery", @planeW
-        do @load
 
-    load:=>
-        manager = new THREE.LoadingManager()
-        manager.onProgress = ( item, loaded, total )=>
-            # console.log "LoadingManager onProgress: ", item, loaded, total
-
-        manager.onLoad = (  )=>
-            do @build
-            $(window).trigger "load_complete"
-
-        @loader = new THREE.OBJLoader manager
-        @elements = {};
-        for key of @objects
-            @loadObject @objects[key], key
-
-    loadObject:(obj, key)=>
-        @loader.load 'data/'+obj.url, ( object )=>
-            @elements[key] = new Model3D(object, obj.position)
-            # console.log(key+": ", @elements[key]);
-        , @onProgress, @onError
-
-    build:()=>
+    build:(@elements)=>
         # console.log "@elements: >> ", @elements
         @elements.bush.position.x = @planeW - @padding
-        @elements.three.position.x = -@planeW * .6
+        @elements.tree.position.x = -@planeW * .6
         @elements.plant.position.x = -@planeW * .55
         
         @elements.wallR.position.x = -@planeW * 5
@@ -84,8 +29,6 @@ class Scenery extends THREE.Group
         @width = bbox.max.x - bbox.min.x
         @height = bbox.max.y - bbox.min.y
         @length = bbox.max.z - bbox.min.z
-
-        $(window).trigger "scenery_ready"
         
         
         # @elements.river.mesh.material.color = 0x0052af
@@ -103,12 +46,5 @@ class Scenery extends THREE.Group
         if @position.z > @length
             @position.z = 0
 
-    onProgress: ( xhr ) ->
-        if xhr.lengthComputable
-            percentComplete = xhr.loaded / xhr.total * 100
-            # console.log "onProgress: ", Math.round(percentComplete, 2) + '% downloaded'
-
-    onError: ( xhr ) =>
-        console.log "onError", xhr
 
 module.exports = Scenery

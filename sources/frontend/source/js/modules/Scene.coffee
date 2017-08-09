@@ -1,4 +1,5 @@
 # Mountain = require "./Mountain.coffee"
+Loader = require "./Loader.coffee"
 Scenery = require "./Scenery.coffee"
 Runner = require "./Runner.coffee"
 Obstacle = require "./Obstacle.coffee"
@@ -73,6 +74,10 @@ class Scene
         stats = new Stats()
         document.body.appendChild stats.domElement
 
+        @loader = new Loader()
+        $(@loader).on 'complete', @loadComplete
+        @loader.start()
+
         # SCENERY
         @scenery = new Scenery(@PLANE_WIDTH, @PLANE_LENGTH, @PADDING)
         @scene.add @scenery
@@ -97,21 +102,20 @@ class Scene
         # @scene.add @camera, @axishelper, @runner
         @scene.add @camera, sky, @axishelper
 
-        $(window).on "load_complete", @loadComplete
-        $(window).on "scenery_ready", @sceneryReady
+        
 
     loadComplete:()=>
+
+        # SCENERY BUILD
+        @scenery.build(@loader.getSceneryElements())
+
         # LIGHTS
         directionalLight = new THREE.DirectionalLight 0xFFFFFF, 1
         directionalLight.position.set 0, 1, 0
         hemisphereLight = new THREE.HemisphereLight 0x000000, 0xFFFFFF, 1
         hemisphereLight.position.y = 500
         
-
         @scene.add directionalLight, hemisphereLight
-
-    sceneryReady:()=>
-        # do @createSpotlights
 
     createSpotlights:()=>
         spotLight = {}
