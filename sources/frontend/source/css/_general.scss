@@ -10,9 +10,7 @@ body, html {
 	@include font-size(16);
 	font-family: $light;
 	color: #b6b9ad;
-	overflow-x: hidden;
-	overflow-y: auto;
-	// @include scrollbar(6px, $clr-txt, rgba(0, 0, 0, 0.8));
+	overflow: hidden;
 	 
 }
 
