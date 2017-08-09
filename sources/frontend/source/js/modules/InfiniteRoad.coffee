@@ -99,12 +99,7 @@ class InfiniteRoad
         sky.position.y = 300
         sky.position.z = -@PLANE_LENGTH / 2 + @PADDING
 
-        # LIGHTS
-        # do @createSpotlights
-        directionalLight = new THREE.DirectionalLight 0x00ff00, 1
-        directionalLight.position.set 0, 1, 0
-        hemisphereLight = new THREE.HemisphereLight 0x000000, 0x37474F, 1
-        hemisphereLight.position.y = 500
+        
 
         # OBSTACLES
         # do @startObstacles
@@ -113,7 +108,45 @@ class InfiniteRoad
         @runner = new Runner @PLANE_WIDTH, @PLANE_LENGTH, @PADDING
 
         # @scene.add @camera, directionalLight, @plane, @axishelper, @runner
-        @scene.add @camera, directionalLight, hemisphereLight, sky, @axishelper
+        @scene.add @camera, sky, @axishelper
+
+        $(window).on "load_complete", @loadComplete
+
+    loadComplete:()=>
+        # LIGHTS
+        directionalLight = new THREE.DirectionalLight 0x00ff00, 1
+        directionalLight.position.set 0, 1, 0
+        hemisphereLight = new THREE.HemisphereLight 0x000000, 0x37474F, 1
+        hemisphereLight.position.y = 500
+        do @createSpotlights
+
+        @scene.add directionalLight, hemisphereLight
+
+    createSpotlights:()=>
+        spotLight = {}
+        target = {}
+        targetGeometry = {}
+        targetMaterial = {}
+
+        for i in [0...5]
+            targetGeometry = new THREE.BoxGeometry 1, 1, 1
+            targetMaterial = new THREE.MeshNormalMaterial()
+            target = new THREE.Mesh targetGeometry, targetMaterial
+            target.position.set 0, 2, ( i * @PLANE_LENGTH / 5 ) - ( @PLANE_LENGTH / 2.5 )
+            target.visible = false
+            @scene.add target
+
+            spotLight = new THREE.SpotLight 0x0052af, 2
+            # spotLight.position.set 150, ( i * @PLANE_LENGTH / 5 ) - ( @PLANE_LENGTH / 2.5 ), -200
+            spotLight.castShadow = true
+            spotLight.shadowCameraNear = 10
+            spotLight.shadowCameraVisible = false
+            spotLight.target = target
+            spotLight.shadowMapWidth = 2048
+            spotLight.shadowMapHeight = 2048
+            spotLight.fov = 40
+
+            @scenery.objects.river.mesh.add spotLight
         
     startObstacles:=>
         @obstacleSpawnIntervalID = window.setInterval =>
@@ -147,33 +180,6 @@ class InfiniteRoad
         planeRight.position.x = @PLANE_WIDTH
 
         @scene.add planeLeft, planeRight
-
-        
-    createSpotlights:()=>
-        spotLight = {}
-        target = {}
-        targetGeometry = {}
-        targetMaterial = {}
-
-        for i in [0...5]
-            targetGeometry = new THREE.BoxGeometry 1, 1, 1
-            targetMaterial = new THREE.MeshNormalMaterial()
-            target = new THREE.Mesh targetGeometry, targetMaterial
-            target.position.set 0, 2, ( i * @PLANE_LENGTH / 5 ) - ( @PLANE_LENGTH / 2.5 )
-            target.visible = false
-            @scene.add target
-
-            spotLight = new THREE.SpotLight 0xFFFFFF, 2
-            spotLight.position.set 150, ( i * @PLANE_LENGTH / 5 ) - ( @PLANE_LENGTH / 2.5 ), -200
-            spotLight.castShadow = true
-            spotLight.shadowCameraNear = 10
-            spotLight.shadowCameraVisible = false
-            spotLight.target = target
-            spotLight.shadowMapWidth = 2048
-            spotLight.shadowMapHeight = 2048
-            spotLight.fov = 40
-
-            @plane.add spotLight
     
     render:()=>
         @globalRenderID = requestAnimationFrame @render

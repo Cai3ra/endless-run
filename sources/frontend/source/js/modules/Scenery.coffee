@@ -64,6 +64,7 @@ class Scenery extends THREE.Group
         manager.onLoad = (  )=>
             console.log "all complete"
             do @build
+            $(window).trigger "load_complete"
 
         @loader = new THREE.OBJLoader manager
         for key of @objects
