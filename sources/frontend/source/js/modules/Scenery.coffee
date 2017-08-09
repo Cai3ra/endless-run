@@ -58,21 +58,25 @@ class Scenery extends THREE.Group
     load:=>
         manager = new THREE.LoadingManager()
         manager.onProgress = ( item, loaded, total )=>
-            console.log "LoadingManager onProgress: ", item, loaded, total
+            # console.log "LoadingManager onProgress: ", item, loaded, total
 
         manager.onLoad = (  )=>
-            console.log "all complete"
             do @build
             $(window).trigger "load_complete"
 
         @loader = new THREE.OBJLoader manager
         for key of @objects
-            console.log "for: ", @objects[key]
             @loadObject @objects[key]
 
     loadObject:(obj)=>
         @loader.load 'data/'+obj.url, ( object )=>
-            obj.mesh = object
+            object.traverse ( child ) =>
+
+                if child instanceof THREE.Mesh
+                    # child.material.map = texture;
+                    obj.mesh = child
+
+            obj.obj3d = object
         , @onProgress, @onError
 
     build:()=>
@@ -81,9 +85,12 @@ class Scenery extends THREE.Group
             x: -@planeW,
             y: 0,
             z: 0,
+            obj3d: @objects.wallR.obj3d.clone()
             mesh: @objects.wallR.mesh.clone()
         }
-        @objects.wallL.mesh.rotation.y = Math.PI
+        
+        @objects.wallL.obj3d.rotation.y = Math.PI
+        
         
         @objects.bush.x = @planeW - @padding
         @objects.three.x = -@planeW * .6
@@ -92,10 +99,22 @@ class Scenery extends THREE.Group
         window.three = @objects.three
         for key of @objects
             obj = @objects[key]
-            obj.mesh.position.x = obj.x
-            obj.mesh.position.y = obj.y
-            obj.mesh.position.z = obj.z
-            @.add obj.mesh
+            obj.obj3d.position.x = obj.x
+            obj.obj3d.position.y = obj.y
+            obj.obj3d.position.z = obj.z
+            @.add obj.obj3d
+
+        $(window).trigger "scenery_ready"
+        
+        console.log("asas", @objects.river.mesh.material.color);
+        # @objects.river.mesh.material.color = 0x0052af
+        @objects.river.mesh.material = new THREE.MeshPhongMaterial ({color:0x0052af})
+        do @addLights
+
+    addLights:()=>
+        # directionalLight = new THREE.DirectionalLight 0x0052af, 1
+        # directionalLight.position.set 0, 1, 0
+        # @objects.river.mesh.receiveShadow = true
 
     onProgress: ( xhr ) ->
         if xhr.lengthComputable

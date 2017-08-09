@@ -1,5 +1,5 @@
 Tunel = require './modules/Tunel.coffee'
-InfiniteRoad = require './modules/InfiniteRoad.coffee'
+Scene = require './modules/Scene.coffee'
 
 class App
 	texturesLoaded:0
@@ -23,7 +23,7 @@ class App
 	loader: new THREE.TextureLoader()
 
 	constructor:()->
-		@infiniteRoad = new InfiniteRoad()
+		@scene = new Scene()
 		# do @initLoader
 
 	initLoader:()=>
