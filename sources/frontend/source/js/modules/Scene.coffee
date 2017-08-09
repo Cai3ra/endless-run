@@ -164,6 +164,8 @@ class Scene
     
     render:()=>
         @globalRenderID = requestAnimationFrame @render
+
+        @scenery.move()
         
         if @obstacles.length > 0
             @obstacles.forEach (el, idx)->
