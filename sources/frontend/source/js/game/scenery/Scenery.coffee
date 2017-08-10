@@ -1,4 +1,5 @@
 ObjContainer = require "../objects/ObjContainer.coffee" 
+SegmentManager = require "./SegmentManager.coffee" 
 
 class Scenery extends THREE.Group
 
@@ -20,9 +21,23 @@ class Scenery extends THREE.Group
         @elements.wallL.rotation.y = Math.PI
 
         
-        for key of @elements
-            el = @elements[key]
+        @segmentManager = new SegmentManager({
+            wallL: @elements.wallL
+            wallR: @elements.wallR
+            river: @elements.river
+        })
+        @.add @segmentManager.getSegments()
+
+        @sceneryElements = {
+            bush: @elements.bush
+            arch: @elements.arch
+            tree: @elements.tree
+            plant: @elements.plant
+        }
+        for key of @sceneryElements
+            el = @sceneryElements[key]
             @.add el
+
 
         # Computing total width, height and length
         bbox = new THREE.Box3().setFromObject(@)
@@ -30,9 +45,6 @@ class Scenery extends THREE.Group
         @height = bbox.max.y - bbox.min.y
         @length = bbox.max.z - bbox.min.z
         
-        
-        # @elements.river.mesh.material.color = 0x0052af
-        @elements.river.mesh.material = new THREE.MeshPhongMaterial ({color:0x0052af})
         do @addLights
 
     addLights:()=>
