@@ -1,4 +1,4 @@
-Model3D = require "./Model3D.coffee" 
+ObjContainer = require "../objects/ObjContainer.coffee" 
 
 class Scenery extends THREE.Group
 
@@ -15,7 +15,7 @@ class Scenery extends THREE.Group
         @elements.wallR.position.x = -@planeW * 5
 
         # Criando parede esquerda manualmente baseada na direita
-        @elements.wallL = new Model3D(@elements.wallR.clone())
+        @elements.wallL = new ObjContainer(@elements.wallR.clone())
         @elements.wallL.position.x = @planeW*5
         @elements.wallL.rotation.y = Math.PI
 

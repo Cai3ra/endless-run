@@ -5,10 +5,10 @@ path = require "path"
 config = 
     taskName: "browser-sync"
     watch: no
-    browser: "chrome"
+    browser: "google chrome"
     logPrefix: "Development"
     notify: yes
-    open: "external"
+    open: "local"
     reloadDelay: 2000
     port: 3000
     server:

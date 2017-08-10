@@ -1,8 +1,8 @@
 # Mountain = require "./Mountain.coffee"
 Loader = require "./Loader.coffee"
-Scenery = require "./Scenery.coffee"
-Runner = require "./Runner.coffee"
-Obstacle = require "./Obstacle.coffee"
+Scenery = require "./scenery/Scenery.coffee"
+Runner = require "./objects/Runner.coffee"
+Obstacle = require "./objects/Obstacle.coffee"
 
 class Scene
 

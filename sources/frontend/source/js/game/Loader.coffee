@@ -1,4 +1,4 @@
-Model3D = require "./Model3D.coffee" 
+ObjContainer = require "./objects/ObjContainer.coffee" 
 
 class Loader
     objects: {
@@ -52,7 +52,7 @@ class Loader
 
     loadObject:(obj, key)=>
         @loader.load 'data/'+obj.url, ( object )=>
-            @objects[key].model = new Model3D(object, obj.position)
+            @objects[key].model = new ObjContainer(object, obj.position)
         , @onProgress, @onError
 
     getSceneryElements:()->
