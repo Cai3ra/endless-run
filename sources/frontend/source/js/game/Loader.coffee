@@ -37,7 +37,7 @@ class Loader
     }
 
     constructor:()->
-        console.log "Loader", @
+        # console.log "Loader", @
 
     start:()=>
         manager = new THREE.LoadingManager()

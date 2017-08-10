@@ -1,7 +1,7 @@
 class Model3D extends THREE.Object3D
     
     constructor:(object, position)->
-        console.log "Model3D", @
+        # console.log "Model3D", @
         super()
 
         @obj = object

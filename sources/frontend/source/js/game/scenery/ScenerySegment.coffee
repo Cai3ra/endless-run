@@ -1,11 +1,21 @@
 class ScenerySegment extends THREE.Group
-
-    constructor:(@objs)->
+    elements: []
+    constructor:(@objs, @planeW, @planeLen, @idx)->
         super()
-        for key of @objs
-            console.log "el", el
-            el = @objs[key]
-            @.add el
+        @objs.river.mesh.material = new THREE.MeshPhongMaterial ({color:0x0052af})
 
+        @.position.x = 0
+        @.position.y = 0
+        @.position.z = -@planeLen * @idx if @idx isnt 0
+
+        console.log "ScenerySegment: ", @objs
+        for key of @objs
+            el = @objs[key].clone()
+            if key is "wallR"
+                el.position.x = @planeW
+            if key is "wallL"
+                el.position.x = -@planeW
+                el.rotation.y = Math.PI
+            @.add el
 
 module.exports = ScenerySegment

@@ -2,42 +2,39 @@ ObjContainer = require "../objects/ObjContainer.coffee"
 SegmentManager = require "./SegmentManager.coffee" 
 
 class Scenery extends THREE.Group
-
+    segments:{}
+    velocity: 3
     constructor:(@planeW, @planeLen, @padding)->
         super()
         console.log "Scenery", @planeW
 
     build:(@elements)=>
         # console.log "@elements: >> ", @elements
-        @elements.bush.position.x = @planeW - @padding
-        @elements.tree.position.x = -@planeW * .6
-        @elements.plant.position.x = -@planeW * .55
-        
-        @elements.wallR.position.x = -@planeW * 5
 
+        @elements.wallR.position.x = -@planeW * 5
         # Criando parede esquerda manualmente baseada na direita
         @elements.wallL = new ObjContainer(@elements.wallR.clone())
         @elements.wallL.position.x = @planeW*5
         @elements.wallL.rotation.y = Math.PI
 
-        
-        @segmentManager = new SegmentManager({
-            wallL: @elements.wallL
-            wallR: @elements.wallR
-            river: @elements.river
-        })
-        @.add @segmentManager.getSegments()
-
+        # criando gerenciador de segmentos do cenario
         @sceneryElements = {
             bush: @elements.bush
             arch: @elements.arch
             tree: @elements.tree
             plant: @elements.plant
         }
-        for key of @sceneryElements
-            el = @sceneryElements[key]
-            @.add el
 
+        # criando gerenciador de segmentos do cenario
+        @segmentManager = new SegmentManager({
+            wallL: @elements.wallL
+            wallR: @elements.wallR
+            river: @elements.river
+        }, @sceneryElements, @planeW, @planeLen)
+        @segments = @segmentManager.getSegments() 
+        for key of @segments
+            el = @segments[key]
+            @.add el
 
         # Computing total width, height and length
         bbox = new THREE.Box3().setFromObject(@)
@@ -54,9 +51,15 @@ class Scenery extends THREE.Group
 
 
     move:()=>
-        @position.z+=1;
-        if @position.z > @length
-            @position.z = 0
+        for key of @segments
+            _seg = @segments[key]
+            _seg.position.z += @velocity
+            if _seg.position.z > @planeLen * 0.5
+                $(@segmentManager).trigger "segment_update", [_seg]
+                # _seg.position.z = -@planeLen
+        
+
+        
 
 
 module.exports = Scenery

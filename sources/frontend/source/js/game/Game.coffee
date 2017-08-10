@@ -10,8 +10,6 @@ class Scene
         window.addEventListener 'resize', @onResize
         do @setUp
         do @init
-        do @render
-        do @onResize
 
     setUp:()=>
         @WW = window.innerWidth
@@ -80,6 +78,7 @@ class Scene
 
         # SCENERY
         @scenery = new Scenery(@PLANE_WIDTH, @PLANE_LENGTH, @PADDING)
+        # @scene.segments.firstSegment.lookAt(@camera.position)
         @scene.add @scenery
 
         # SKY
@@ -108,7 +107,8 @@ class Scene
 
         # SCENERY BUILD
         @scenery.build(@loader.getSceneryElements())
-
+        
+        
         # LIGHTS
         directionalLight = new THREE.DirectionalLight 0xFFFFFF, 1
         directionalLight.position.set 0, 1, 0
@@ -116,6 +116,9 @@ class Scene
         hemisphereLight.position.y = 500
         
         @scene.add directionalLight, hemisphereLight
+        
+        do @render
+        do @onResize
 
     createSpotlights:()=>
         spotLight = {}
