@@ -1,29 +1,41 @@
-class Runner
+class Runner extends THREE.Object3D
 
-    object: {}
+    destPos:{}
 
-    constructor:(@planeW, @planeLen, @padding)->
-        objectGeometry = {}
-        objectMaterial = {}
+    constructor:(@mesh, @planeW, @planeLen, @padding)->
+        super()
 
-        objectGeometry = new THREE.CylinderGeometry 1, 1, 5, 100
-        objectMaterial = new THREE.MeshLambertMaterial {
-            color: 0x7f1462,
-            shading: THREE.FlatShading
+        console.log("Runner")
+
+        material = {}
+
+        material = new THREE.MeshLambertMaterial {
+            color: 0x00FFFF
         }
-        @object = new THREE.Mesh objectGeometry, objectMaterial
-        @object.castShadow = true
-        @object.position.set 0, 5, ( @planeLen / 2 )
-        @object.rotation.x = 0.200
+        @mesh.material = material;
+
+        @.add @mesh
+
+        @mesh.castShadow = true
+        @position.set 0, 0, 300
+        @rotation.y = Math.PI
+        @scale.set 0.7, 0.7, 0.7
+
+        @destPos = @position.clone();
+
+        console.log("Runner", @, @castShadow)
 
         window.addEventListener 'keydown', @updateControls
   
-        return @object
 
     updateControls:(e)=>
-        if e.keyCode is 37 and @object.position.x isnt -( @planeW - @padding ) / 2
-            @object.position.x -= ( @planeW - @padding ) / 2
-        else if e.keyCode is 39 and @object.position.x isnt ( @planeW - @padding ) / 2
-            @object.position.x += ( @planeW - @padding ) / 2
+        if e.keyCode is 37 and @position.x isnt -( @planeW - @padding ) / 2
+            @destPos.x -= ( @planeW - @padding ) / 2
+        else if e.keyCode is 39 and @position.x isnt ( @planeW - @padding ) / 2
+            @destPos.x += ( @planeW - @padding ) / 2
+
+
+    update:()=>
+        @position.x += (@destPos.x - @position.x) * 0.2
 
 module.exports = Runner

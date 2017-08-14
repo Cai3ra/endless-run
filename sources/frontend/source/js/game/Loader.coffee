@@ -33,6 +33,10 @@ class Loader
         plant: {
             url: 'PLANTINHA_01.obj',
             position:{x:0, y:-3, z:240}
+        },
+        runner: {
+            url: 'TARZAN_01.obj',
+            position:{x:0, y:0, z:0}
         }
     }
 
@@ -64,6 +68,9 @@ class Loader
             tree:@objects.tree.model,
             plant:@objects.plant.model
         }
+
+    getRunner:()->
+        @objects.runner.model.mesh
 
     onProgress: ( xhr ) ->
         if xhr.lengthComputable

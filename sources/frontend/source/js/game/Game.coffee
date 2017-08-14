@@ -68,6 +68,7 @@ class Scene
 
         #  CONTROLS
         controls = new THREE.OrbitControls( @camera, @renderer.domElement )
+        controls.enableKeys = false
 
         # STATS
         stats = new Stats()
@@ -90,11 +91,8 @@ class Scene
 
         # OBSTACLES
         # do @startObstacles
-        
-        # RUNNER
-        @runner = new Runner @PLANE_WIDTH, @PLANE_LENGTH, @PADDING
+    
 
-        # @scene.add @camera, @axishelper, @runner
         @scene.add @camera, @axishelper, @skybox
 
         
@@ -103,6 +101,11 @@ class Scene
 
         # SCENERY BUILD
         @scenery.build(@loader.getSceneryElements())
+
+        
+        # RUNNER
+        @runner = new Runner @loader.getRunner(), @PLANE_WIDTH, @PLANE_LENGTH, @PADDING
+        @scene.add @runner
         
         
         # LIGHTS
@@ -169,6 +172,8 @@ class Scene
         @globalRenderID = requestAnimationFrame @render
 
         @scenery.move()
+
+        @runner.update()
         
         if @obstacles.length > 0
             @obstacles.forEach (el, idx)->
@@ -200,17 +205,17 @@ class Scene
         $('#btn-restart').off 'click'
 
     detectCollisions:(_obsts)=>
-        _origin = @runner.position.clone()
-        _vMax = @runner.geometry.vertices.length
-        for v in [0..._vMax]
-            _localVertex = @runner.geometry.vertices[v].clone()
-            _globalVertex = _localVertex.applyMatrix4(@runner.matrix)
-            _directionVector = _globalVertex.sub(@runner.position)
-            _ray = new THREE.Raycaster(_origin, _directionVector.clone().normalize())
-            _intersections = _ray.intersectObjects(_obsts)
+        # _origin = @runner.position.clone()
+        # _vMax = @runner.geometry.vertices.length
+        # for v in [0..._vMax]
+        #     _localVertex = @runner.geometry.vertices[v].clone()
+        #     _globalVertex = _localVertex.applyMatrix4(@runner.matrix)
+        #     _directionVector = _globalVertex.sub(@runner.position)
+        #     _ray = new THREE.Raycaster(_origin, _directionVector.clone().normalize())
+        #     _intersections = _ray.intersectObjects(_obsts)
 
-            if _intersections.length > 0 and _intersections[0].distance < _directionVector.length()
-                return true
+        #     if _intersections.length > 0 and _intersections[0].distance < _directionVector.length()
+        #         return true
         
         return false
             

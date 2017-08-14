@@ -4,8 +4,8 @@ class SkyBox extends THREE.Mesh
 		@cubeMap.format = THREE.RGBFormat
 
 		loader = new THREE.ImageLoader()
-		loader.load 'img/textures/skybox.png', (image) =>
-			console.log(">>>>>> SkyBox loaded")
+		loader.load 'img/skybox.png', (image) =>
+			# console.log(">>>>>> SkyBox loaded")
 
 			getSide = (x, y) ->
 				size = 1024
