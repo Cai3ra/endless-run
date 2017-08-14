@@ -85,6 +85,8 @@ class Scene
         # SKY
         @skybox = new SkyBox()
 
+        window.skyboxCubeMap = @skybox.cubeMap
+
 
         # OBSTACLES
         # do @startObstacles

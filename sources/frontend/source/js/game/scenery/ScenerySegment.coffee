@@ -2,7 +2,11 @@ class ScenerySegment extends THREE.Group
     elements: []
     constructor:(@objs, @planeW, @planeLen, @idx)->
         super()
-        @objs.river.mesh.material = new THREE.MeshPhongMaterial ({color:0x0052af})
+        @objs.river.mesh.material = new THREE.MeshPhongMaterial( {
+            color: 0x0052af,
+            shininess: 100,
+            envMap: window.skyboxCubeMap
+        } )
 
         @.position.x = 0
         @.position.y = 0
