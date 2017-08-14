@@ -13,7 +13,7 @@ class Scenery extends THREE.Group
 
         @elements.wallR.position.x = -@planeW * 5
         # Criando parede esquerda manualmente baseada na direita
-        @elements.wallL = new ObjContainer(@elements.wallR.clone())
+        @elements.wallL = new ObjContainer(@elements.wallR.clone(), "wallL")
         @elements.wallL.position.x = @planeW*5
         @elements.wallL.rotation.y = Math.PI
 
@@ -41,6 +41,12 @@ class Scenery extends THREE.Group
         @width = bbox.max.x - bbox.min.x
         @height = bbox.max.y - bbox.min.y
         @length = bbox.max.z - bbox.min.z
+
+        # bbox2 = new THREE.Box3().setFromObject(@elements.wallR)
+        # @width = bbox2.max.x - bbox2.min.x
+        # @height = bbox2.max.y - bbox2.min.y
+        # @length = bbox2.max.z - bbox2.min.z
+
         
         do @addLights
 
@@ -54,12 +60,8 @@ class Scenery extends THREE.Group
         for key of @segments
             _seg = @segments[key]
             _seg.position.z += @velocity
-            if _seg.position.z > @planeLen * 0.5
-                $(@segmentManager).trigger "segment_update", [_seg]
-                # _seg.position.z = -@planeLen
-        
-
-        
+            if _seg.position.z > @planeLen
+                $(@segmentManager).trigger "segment_update", [_seg]    
 
 
 module.exports = Scenery

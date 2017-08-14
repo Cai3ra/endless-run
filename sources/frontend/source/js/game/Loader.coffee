@@ -56,21 +56,22 @@ class Loader
 
     loadObject:(obj, key)=>
         @loader.load 'data/'+obj.url, ( object )=>
-            @objects[key].model = new ObjContainer(object, obj.position)
+            # console.log(">>>>>> OBJECT", key)
+            @objects[key].container = new ObjContainer(object, key, obj.position)
         , @onProgress, @onError
 
     getSceneryElements:()->
         {
-            river:@objects.river.model,
-            wallR:@objects.wallR.model,
-            bush:@objects.bush.model,
-            arch:@objects.arch.model,
-            tree:@objects.tree.model,
-            plant:@objects.plant.model
+            river:@objects.river.container,
+            wallR:@objects.wallR.container,
+            bush:@objects.bush.container,
+            arch:@objects.arch.container,
+            tree:@objects.tree.container,
+            plant:@objects.plant.container
         }
 
     getRunner:()->
-        @objects.runner.model.mesh
+        @objects.runner.container
 
     onProgress: ( xhr ) ->
         if xhr.lengthComputable

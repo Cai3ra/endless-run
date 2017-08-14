@@ -22,7 +22,9 @@ class SegmentManager
             _sceneryEl = @sceneryElements[key]
             for idx in [0...2]
                 _sceneryCloneEl = _sceneryEl.clone()
-                _sceneryCloneEl.position.z = Math.random() *  _segment.position.z
+                _sceneryCloneEl.position.z = Math.random() *  @planeLen - (@planeLen/2)
+                # if _segment.materialDebug
+                #     _sceneryCloneEl.mesh.material = _segment.materialDebug
 
                 if key is "bush"
                     _sceneryCloneEl.position.x = @planeW
@@ -43,7 +45,7 @@ class SegmentManager
                 _segment.add _sceneryCloneEl
                 _segment.elements.push _sceneryCloneEl
         
-        _segment.position.z = -@planeLen
+        _segment.position.z = -@planeLen*2
 
     removeElementsInSegment:(e, _segment)=>
         # console.log "removeElementsInSegment", _segment

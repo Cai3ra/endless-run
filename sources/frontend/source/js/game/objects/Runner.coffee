@@ -2,28 +2,28 @@ class Runner extends THREE.Object3D
 
     destPos:{}
 
-    constructor:(@mesh, @planeW, @planeLen, @padding)->
+    constructor:(@container, @planeW, @planeLen, @padding)->
         super()
 
-        console.log("Runner")
+        # console.log("Runner")
 
         material = {}
 
         material = new THREE.MeshLambertMaterial {
             color: 0x00FFFF
         }
-        @mesh.material = material;
+        @container.mesh.material = material;
 
-        @.add @mesh
+        @.add @container
 
-        @mesh.castShadow = true
+        @container.mesh.castShadow = true
         @position.set 0, 0, 280
         @rotation.y = Math.PI
         @scale.set 0.9, 0.9, 0.9
 
         @destPos = @position.clone();
 
-        console.log("Runner", @, @castShadow)
+        # console.log("Runner", @, @castShadow)
 
         window.addEventListener 'keydown', @updateControls
   

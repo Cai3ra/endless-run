@@ -8,6 +8,8 @@ SkyBox = require "./objects/SkyBox.coffee"
 class Scene
 
     constructor:()->
+        window.DEV_MODE = true
+        
         window.addEventListener 'resize', @onResize
         do @setUp
         do @init
@@ -18,7 +20,7 @@ class Scene
         @WW2 = @WW * 0.5
         @WH2 = @WH * 0.5
         @PLANE_WIDTH = 50
-        @PLANE_LENGTH = 1000
+        @PLANE_LENGTH = 600
         @PADDING = @PLANE_WIDTH / 5 * 2
         @OBSTACLES_COUNT = 10
 
@@ -64,11 +66,14 @@ class Scene
         @camera.position.set 0, 17, 325
         window.camera = @camera
 
-        @axishelper = new THREE.AxisHelper -@PLANE_LENGTH
+        if window.DEV_MODE
+            @axishelper = new THREE.AxisHelper -@PLANE_LENGTH
 
-        #  CONTROLS
-        controls = new THREE.OrbitControls( @camera, @renderer.domElement )
-        controls.enableKeys = false
+            #  CONTROLS
+            controls = new THREE.OrbitControls( @camera, @renderer.domElement )
+            controls.enableKeys = false
+
+            @scene.add @camera, @axishelper
 
         # STATS
         stats = new Stats()
@@ -85,15 +90,15 @@ class Scene
 
         # SKY
         @skybox = new SkyBox()
-
         window.skyboxCubeMap = @skybox.cubeMap
+        @scene.add @skybox
 
 
         # OBSTACLES
         # do @startObstacles
     
 
-        @scene.add @camera, @axishelper, @skybox
+        
 
         
 
