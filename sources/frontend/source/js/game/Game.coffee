@@ -67,8 +67,8 @@ class Scene
         @axishelper = new THREE.AxisHelper -@PLANE_LENGTH
 
         #  CONTROLS
-        controls = new THREE.OrbitControls( @camera, @renderer.domElement )
-        controls.enableKeys = false
+        # controls = new THREE.OrbitControls( @camera, @renderer.domElement )
+        # controls.enableKeys = false
 
         # STATS
         stats = new Stats()
