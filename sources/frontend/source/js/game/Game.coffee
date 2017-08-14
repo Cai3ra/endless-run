@@ -70,8 +70,9 @@ class Scene
             @axishelper = new THREE.AxisHelper -@PLANE_LENGTH
 
             #  CONTROLS
-            controls = new THREE.OrbitControls( @camera, @renderer.domElement )
-            controls.enableKeys = false
+            # TODO: não habilitar este controle de camera para mobile
+            # controls = new THREE.OrbitControls( @camera, @renderer.domElement )
+            # controls.enableKeys = false
 
             @scene.add @camera, @axishelper
 
@@ -96,11 +97,6 @@ class Scene
 
         # OBSTACLES
         # do @startObstacles
-    
-
-        
-
-        
 
     loadComplete:()=>
 

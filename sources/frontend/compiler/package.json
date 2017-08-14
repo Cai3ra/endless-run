@@ -38,6 +38,7 @@
     "gulp-uglify": "*",
     "gulp-useref": "*",
     "gulp-watch": "*",
+    "hammerjs": "^2.0.8",
     "vinyl-buffer": "*",
     "vinyl-source-stream": "*"
   }

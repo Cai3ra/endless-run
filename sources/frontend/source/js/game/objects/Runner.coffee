@@ -26,12 +26,16 @@ class Runner extends THREE.Object3D
         # console.log("Runner", @, @castShadow)
 
         window.addEventListener 'keydown', @updateControls
+
+        stage = document.getElementById 'scene'
+        mc = new Hammer stage
+        mc.on "swipe", @updateControls
   
 
     updateControls:(e)=>
-        if e.keyCode is 37 and @position.x isnt -( @planeW - @padding ) / 2
+        if e.keyCode is 37 or e.deltaX < 0 and @position.x isnt -( @planeW - @padding ) / 2
             @destPos.x -= ( @planeW - @padding ) / 3
-        else if e.keyCode is 39 and @position.x isnt ( @planeW - @padding ) / 2
+        else if e.keyCode is 39 or e.deltaX > 0 and @position.x isnt ( @planeW - @padding ) / 2
             @destPos.x += ( @planeW - @padding ) / 3
 
 
