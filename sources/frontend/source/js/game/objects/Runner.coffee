@@ -17,9 +17,9 @@ class Runner extends THREE.Object3D
         @.add @mesh
 
         @mesh.castShadow = true
-        @position.set 0, 0, 290
+        @position.set 0, 0, 280
         @rotation.y = Math.PI
-        @scale.set 0.8, 0.8, 0.8
+        @scale.set 0.9, 0.9, 0.9
 
         @destPos = @position.clone();
 
@@ -30,9 +30,9 @@ class Runner extends THREE.Object3D
 
     updateControls:(e)=>
         if e.keyCode is 37 and @position.x isnt -( @planeW - @padding ) / 2
-            @destPos.x -= ( @planeW - @padding ) / 2
+            @destPos.x -= ( @planeW - @padding ) / 3
         else if e.keyCode is 39 and @position.x isnt ( @planeW - @padding ) / 2
-            @destPos.x += ( @planeW - @padding ) / 2
+            @destPos.x += ( @planeW - @padding ) / 3
 
 
     update:()=>

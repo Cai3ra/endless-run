@@ -61,7 +61,7 @@ class Scene
 
         @camera = new THREE.PerspectiveCamera 45, @WW / @WH, 1, 3000
         # @camera.position.set 0, @PLANE_LENGTH / 125, @PLANE_LENGTH / 2 + @PLANE_LENGTH / 25
-        @camera.position.set 0, 13, 325
+        @camera.position.set 0, 17, 325
         window.camera = @camera
 
         @axishelper = new THREE.AxisHelper -@PLANE_LENGTH
