@@ -3,6 +3,7 @@ Loader = require "./Loader.coffee"
 Scenery = require "./scenery/Scenery.coffee"
 Runner = require "./objects/Runner.coffee"
 Obstacle = require "./objects/Obstacle.coffee"
+SkyBox = require "./objects/SkyBox.coffee"
 
 class Scene
 
@@ -53,7 +54,7 @@ class Scene
         }
         @renderer.setSize @WW, @WH
         @renderer.setClearColor 0xFFFFFF, 1
-        @renderer.shadowMapEnabled = true
+        @renderer.shadowMap.enabled = true
         @renderer.shadowMapSoft = true
 
         @scene = new THREE.Scene()
@@ -82,15 +83,8 @@ class Scene
         @scene.add @scenery
 
         # SKY
-        skyGeometry = new THREE.BoxGeometry @WW*1.5, @WH, 1, 1
-        skyMaterial = new THREE.MeshBasicMaterial {
-            map: THREE.ImageUtils.loadTexture( 'img/background.jpg' ),
-            depthWrite: false,
-            side: THREE.BackSide
-        }
-        sky = new THREE.Mesh skyGeometry, skyMaterial
-        sky.position.y = 300
-        sky.position.z = -@PLANE_LENGTH / 2 + @PADDING
+        @skybox = new SkyBox()
+
 
         # OBSTACLES
         # do @startObstacles
@@ -99,7 +93,7 @@ class Scene
         @runner = new Runner @PLANE_WIDTH, @PLANE_LENGTH, @PADDING
 
         # @scene.add @camera, @axishelper, @runner
-        @scene.add @camera, sky, @axishelper
+        @scene.add @camera, @axishelper, @skybox
 
         
 
