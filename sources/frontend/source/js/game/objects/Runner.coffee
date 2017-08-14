@@ -1,6 +1,7 @@
 class Runner extends THREE.Object3D
 
     destPos:{}
+    lane:0
 
     constructor:(@container, @planeW, @planeLen, @padding)->
         super()
@@ -17,11 +18,13 @@ class Runner extends THREE.Object3D
         @.add @container
 
         @container.mesh.castShadow = true
-        @position.set 0, 0, 280
+        @position.set 0, -1.2, 280
         @rotation.y = Math.PI
         @scale.set 0.9, 0.9, 0.9
 
         @destPos = @position.clone();
+
+        @laneDistance = ( @planeW - @padding ) / 3;
 
         # console.log("Runner", @, @castShadow)
 
@@ -33,10 +36,17 @@ class Runner extends THREE.Object3D
   
 
     updateControls:(e)=>
-        if e.keyCode is 37 or e.deltaX < 0 and @position.x isnt -( @planeW - @padding ) / 2
-            @destPos.x -= ( @planeW - @padding ) / 3
-        else if e.keyCode is 39 or e.deltaX > 0 and @position.x isnt ( @planeW - @padding ) / 2
-            @destPos.x += ( @planeW - @padding ) / 3
+        laneDest = @lane
+        if e.keyCode is 37 or e.deltaX < 0
+            laneDest--
+        else if e.keyCode is 39 or e.deltaX > 0
+            laneDest++
+
+        if laneDest < -1 or laneDest > 1
+            return
+
+        @lane = laneDest
+        @destPos.x = @lane * @laneDistance
 
 
     update:()=>
