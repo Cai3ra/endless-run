@@ -17,9 +17,9 @@ class Runner extends THREE.Object3D
         @.add @mesh
 
         @mesh.castShadow = true
-        @position.set 0, 0, 300
+        @position.set 0, 0, 290
         @rotation.y = Math.PI
-        @scale.set 0.7, 0.7, 0.7
+        @scale.set 0.8, 0.8, 0.8
 
         @destPos = @position.clone();
 
