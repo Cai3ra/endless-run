@@ -5,14 +5,14 @@ Runner = require "./objects/Runner.coffee"
 Obstacle = require "./objects/Obstacle.coffee"
 SkyBox = require "./objects/SkyBox.coffee"
 
-class Scene
+class Game
 
     constructor:()->
         window.DEV_MODE = true
         
         window.addEventListener 'resize', @onResize
-        do @setUp
-        do @init
+        do @setUp    
+        do @init    
 
     setUp:()=>
         @WW = window.innerWidth
@@ -98,9 +98,11 @@ class Scene
 
         # OBSTACLES
         # do @startObstacles
+        
 
     loadComplete:()=>
-
+        console.log "loadComplete"
+        $(@).trigger 'complete'
         # SCENERY BUILD
         @scenery.build(@loader.getSceneryElements())
 
@@ -117,45 +119,11 @@ class Scene
         hemisphereLight.position.y = 500
         
         @scene.add directionalLight, hemisphereLight
-        
-        do @render
+
         do @onResize
+        do @start
 
-    createSpotlights:()=>
-        spotLight = {}
-        # target = {}
-        # targetGeometry = {}
-        # targetMaterial = {}
 
-        # for i in [0...5]
-        # targetGeometry = new THREE.BoxGeometry 1, 1, 1
-        # targetMaterial = new THREE.MeshNormalMaterial()
-        # target = new THREE.Mesh targetGeometry, targetMaterial
-        # target.position.set 0, 2, 0
-        # target.visible = false
-        # @scene.add target
-
-        spotLight = new THREE.SpotLight 0x0052af, 2
-        spotLight.position.set @PLANE_WIDTH * .5, 300, 0
-        spotLight.castShadow = true
-        spotLight.shadowCameraNear = 10
-        spotLight.shadowCameraVisible = true
-        spotLight.shadowDarkness = 0.70
-        spotLight.intensity = 2
-
-        # spotLight.shadowMapWidth = 2048
-        # spotLight.shadowMapHeight = 2048
-        # spotLight.fov = 40
-
-        @scene.add spotLight
-
-        # lightTarget = new THREE.Object3D()
-        # lightTarget.position.set(150,10,-100)
-        # @scene.add(lightTarget)
-        # spotLight.target = lightTarget
-
-        # spotLight.target = @scenery.objects.river.mesh
-        # @scenery.objects.river.mesh.add spotLight
         
     startObstacles:=>
         @obstacleSpawnIntervalID = window.setInterval =>
@@ -179,36 +147,17 @@ class Scene
         @scenery.move()
 
         @runner.update()
-
         
-        if @obstacles.length > 0
-            @obstacles.forEach (el, idx)->
-                el.animate() if el
+        
+        # if @obstacles.length > 0
+        #     @obstacles.forEach (el, idx)->
+        #         el.animate() if el
 
-        if @detectCollisions(@obstacles) is true
-            do @gameOver
+        # if @detectCollisions(@obstacles) is true
+        #     do @gameOver
 
         @renderer.render @scene, @camera
-    
-    gameOver:()=>
-        cancelAnimationFrame @globalRenderID
-        window.clearInterval @obstacleSpawnIntervalID
-        window.clearInterval @obstacleCounterIntervalID
 
-        $('#overlay-gameover').fadeIn 100
-        $('#btn-restart').on 'click', @restartGame
-
-    restartGame:=>
-        $('#overlay-gameover').fadeOut 50
-        @OBSTACLE_COUNT = 10
-        @obstacles.forEach ( el, idx )=>
-            @scene.remove @obstacles[ idx ]
-
-        @obstacles = []
-        @runner.position.x = 0
-        do @render
-        do @startObstacles
-        $('#btn-restart').off 'click'
 
     detectCollisions:(_obsts)=>
         # _origin = @runner.position.clone()
@@ -226,6 +175,29 @@ class Scene
         return false
             
 
+    start:()=>
+        do @render
+    
+    end:()=>
+        cancelAnimationFrame @globalRenderID
+        window.clearInterval @obstacleSpawnIntervalID
+        window.clearInterval @obstacleCounterIntervalID
+
+        $('#overlay-gameover').fadeIn 100
+        $('#btn-restart').on 'click', @restartGame
+
+    restart:=>
+        $('#overlay-gameover').fadeOut 50
+        @OBSTACLE_COUNT = 10
+        @obstacles.forEach ( el, idx )=>
+            @scene.remove @obstacles[ idx ]
+
+        @obstacles = []
+        @runner.position.x = 0
+        do @render
+        do @startObstacles
+        $('#btn-restart').off 'click'
+
     onResize:()=>
         @WW = window.innerWidth
         @WH = window.innerHeight
@@ -238,4 +210,4 @@ class Scene
         @renderer.setSize @WW, @WH
 
 
-module.exports = Scene
+module.exports = Game

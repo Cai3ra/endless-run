@@ -23,7 +23,7 @@ class Obstacle
 
         @objGeometry = new THREE.BoxGeometry @objDimension, @objDimension, @objDimension, @objDimension
         @objMaterial = new THREE.MeshLambertMaterial {
-            color: 0x09192b
+            color: 0xff00d2
             shading: THREE.FlatShading
         }
 
@@ -36,7 +36,7 @@ class Obstacle
                 @obj.position.z += 10
             else
                 @obj.position.x = @xPosValues[ @getRandomInteger(0, @xPosValues.length - 1)]
-                @obj.position.z = -@planeLen * 0.5
+                @obj.position.z = -@planeLen * 3
 
         return @obj
 
