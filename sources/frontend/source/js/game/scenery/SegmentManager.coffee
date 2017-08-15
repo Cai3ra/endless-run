@@ -17,9 +17,14 @@ class SegmentManager
         @sceneryElements.tree.position.x = -@planeW * .6
         @sceneryElements.plant.position.x = -@planeW * .55
 
+        @addElementsInSegment @segments.firstSegment
+        @addElementsInSegment @segments.secondSegment
+        @addElementsInSegment @segments.thirdSegment
+
     addElementsInSegment:(_segment)=>
         for key of @sceneryElements
             _sceneryEl = @sceneryElements[key]
+            # console.log "key", key
             for idx in [0...2]
                 _sceneryCloneEl = _sceneryEl.clone()
                 _sceneryCloneEl.position.z = Math.random() *  @planeLen - (@planeLen/2)
@@ -27,9 +32,9 @@ class SegmentManager
                 #     _sceneryCloneEl.mesh.material = _segment.materialDebug
 
                 if key is "bush"
-                    _sceneryCloneEl.position.x = @planeW
+                    _sceneryCloneEl.position.x = @planeW * 0.55
                     if idx % 2 is 0
-                        _sceneryCloneEl.position.x = -@planeW
+                        _sceneryCloneEl.position.x = -@planeW * 0.5
 
                 if key is "tree"
                     _sceneryCloneEl.position.x = -@planeW * .6
@@ -37,15 +42,15 @@ class SegmentManager
                         _sceneryCloneEl.position.x = @planeW * .6
 
                 if key is "plant"
-                    _sceneryCloneEl.position.x = -@planeW * .55
+                    _sceneryCloneEl.position.x = -@planeW * .5
                     if idx % 2 is 0
-                        _sceneryCloneEl.position.x = @planeW * .55
+                        _sceneryCloneEl.position.x = @planeW * .5
 
                 _sceneryCloneEl.name = "random_elem"
                 _segment.add _sceneryCloneEl
                 _segment.elements.push _sceneryCloneEl
         
-        _segment.position.z = -@planeLen*2
+        
 
     removeElementsInSegment:(e, _segment)=>
         # console.log "removeElementsInSegment", _segment
@@ -53,6 +58,7 @@ class SegmentManager
             for el in _segment.elements
                 _segment.remove el
         @addElementsInSegment _segment
+        _segment.position.z = -@planeLen*2
         
     getSegments:=>
         @segments

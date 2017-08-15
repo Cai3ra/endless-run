@@ -71,14 +71,15 @@ class Scene
 
             #  CONTROLS
             # TODO: não habilitar este controle de camera para mobile
-            # controls = new THREE.OrbitControls( @camera, @renderer.domElement )
-            # controls.enableKeys = false
+            controls = new THREE.OrbitControls( @camera, @renderer.domElement )
+            controls.enableKeys = false
+
+            # STATS
+            @stats = new Stats()
+            document.body.appendChild @stats.domElement
 
             @scene.add @camera, @axishelper
 
-        # STATS
-        stats = new Stats()
-        document.body.appendChild stats.domElement
 
         @loader = new Loader()
         $(@loader).on 'complete', @loadComplete
@@ -170,11 +171,15 @@ class Scene
 
     
     render:()=>
+        if window.DEV_MODE
+            @stats.update()
+
         @globalRenderID = requestAnimationFrame @render
 
         @scenery.move()
 
         @runner.update()
+
         
         if @obstacles.length > 0
             @obstacles.forEach (el, idx)->
